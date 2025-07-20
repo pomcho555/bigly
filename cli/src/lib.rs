@@ -42,10 +42,20 @@ pub fn cli_match() -> Result<()> {
 /// Configure Clap
 /// This function will configure clap and match arguments
 pub fn cli_config() -> Result<clap::ArgMatches> {
+    let logo = r#"    ____  ______ _     __ __
+   / __ )/  _/ /|   / // /
+  / __  |/ // /_|  / // /_
+ / /_/ // // __/ / /__  __/
+/_____/___/_/   /_/  /_/   
+
+    "BIGLY!" 
+
+A CLI tool that greps all files under the current directory"#;
+
     let cli_app = App::new("bigly")
         .setting(AppSettings::ArgRequiredElseHelp)
         .version("0.0.1")
-        .about("A CLI tool that greps all files under the current directory")
+        .about(logo)
         .author("pomcho555 <pomcho555@users.noreply.github.com>")
         .arg(
             Arg::new("search")
