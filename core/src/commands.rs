@@ -1,10 +1,10 @@
-use super::hazard;
 use super::error;
+use super::hazard;
 
-use utils::app_config::AppConfig;
-use utils::error::Result;
 use std::fs;
 use std::io::{BufRead, BufReader};
+use utils::app_config::AppConfig;
+use utils::error::Result;
 
 /// Show the configuration file
 pub fn hazard() -> Result<()> {
@@ -30,7 +30,6 @@ pub fn config() -> Result<()> {
 
 /// Simulate an error
 pub fn simulate_error() -> Result<()> {
-
     // Log this Error simulation
     info!("We are simulating an error");
 
@@ -57,7 +56,7 @@ pub fn search(search_term: &str, target_file: Option<&str>) -> Result<()> {
 fn search_in_file(search_term: &str, file_path: &str) -> Result<()> {
     let file = fs::File::open(file_path)?;
     let reader = BufReader::new(file);
-    
+
     for (line_number, line) in reader.lines().enumerate() {
         let line = line?;
         if line.contains(search_term) {
@@ -70,11 +69,11 @@ fn search_in_file(search_term: &str, file_path: &str) -> Result<()> {
 /// Search for a term in all files in a directory
 fn search_in_directory(search_term: &str, dir_path: &str) -> Result<()> {
     let entries = fs::read_dir(dir_path)?;
-    
+
     for entry in entries {
         let entry = entry?;
         let path = entry.path();
-        
+
         if path.is_file() {
             // Skip binary files and hidden files
             if let Some(file_name) = path.file_name() {
@@ -83,7 +82,7 @@ fn search_in_directory(search_term: &str, dir_path: &str) -> Result<()> {
                     continue;
                 }
             }
-            
+
             // Try to search in the file, skip if it's binary or unreadable
             if let Ok(()) = search_in_file(search_term, path.to_str().unwrap_or("")) {
                 // File was successfully searched
@@ -96,7 +95,7 @@ fn search_in_directory(search_term: &str, dir_path: &str) -> Result<()> {
                     continue;
                 }
             }
-            
+
             // Recursively search subdirectories
             if let Some(path_str) = path.to_str() {
                 search_in_directory(search_term, path_str)?;

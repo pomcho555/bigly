@@ -23,14 +23,21 @@ fn test_version() {
 #[test]
 fn test_search_functionality() {
     let mut cmd = Command::cargo_bin("bigly").expect("Calling binary failed");
-    cmd.arg("search").assert().success().stdout(predicate::str::contains("search"));
+    cmd.arg("search")
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("search"));
 }
 
 #[test]
 fn test_search_with_file_option() {
     let mut cmd = Command::cargo_bin("bigly").expect("Calling binary failed");
-    cmd.arg("--file").arg("CLAUDE.md").arg("command")
-        .assert().success().stdout(predicate::str::contains("CLAUDE.md"));
+    cmd.arg("--file")
+        .arg("CLAUDE.md")
+        .arg("command")
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("CLAUDE.md"));
 }
 
 #[test]
