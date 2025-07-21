@@ -12,7 +12,7 @@ fn fetch_config() {
     let config = AppConfig::fetch().unwrap();
 
     // Check the values
-    assert_eq!(config.debug, false);
+    assert!(!config.debug);
     assert_eq!(config.database.url, "custom database url");
 }
 
@@ -24,7 +24,7 @@ fn verify_get() {
     AppConfig::init(Some(config_contents)).unwrap();
 
     // Check value with get
-    assert_eq!(AppConfig::get::<bool>("debug").unwrap(), false);
+    assert!(!AppConfig::get::<bool>("debug").unwrap());
     assert_eq!(
         AppConfig::get::<String>("database.url").unwrap(),
         "custom database url"
