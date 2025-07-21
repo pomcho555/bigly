@@ -6,9 +6,12 @@ use std::sync::RwLock;
 
 use super::error::Result;
 
+// Type alias to simplify complex type
+type ConfigState = (Config, AppConfig, HashMap<String, String>);
+
 // CONFIG static variable stores the raw config, parsed AppConfig, and runtime overrides
 lazy_static! {
-    static ref CONFIG: RwLock<Option<(Config, AppConfig, HashMap<String, String>)>> = RwLock::new(None);
+    static ref CONFIG: RwLock<Option<ConfigState>> = RwLock::new(None);
 }
 
 #[derive(Debug, Deserialize, Clone)]

@@ -23,14 +23,14 @@ utils = { path = "utils" }
 cli = { path = "cli"}
 core = { path = "core" }
 human-panic = "1.0.3"
-better-panic = "0.2.0"
+better-panic = "0.3.0"
 log = "0.4.11"
 slog-scope = "4.3.0"
 slog-stdlog = "4.1.0"
 
 [dev-dependencies]
 assert_cmd = "1.0.1"
-predicates = "1.0.5"
+predicates = "3.1"
 
 [profile.dev]
 opt-level=0
