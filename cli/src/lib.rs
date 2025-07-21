@@ -1,4 +1,4 @@
-use clap::{App, AppSettings, Arg};
+use clap::{Arg, ArgMatches, Command};
 
 use core::commands;
 use utils::app_config::AppConfig;
@@ -10,11 +10,11 @@ pub fn cli_match() -> Result<()> {
     let cli_matches = cli_config()?;
 
     // Merge clap config file if the value is set
-    AppConfig::merge_config(cli_matches.value_of("config"))?;
+    AppConfig::merge_config(cli_matches.get_one::<String>("config").map(|s| s.as_str()))?;
 
     // Check for search term (main functionality)
-    if let Some(search_term) = cli_matches.value_of("search") {
-        let target_file = cli_matches.value_of("file");
+    if let Some(search_term) = cli_matches.get_one::<String>("search") {
+        let target_file = cli_matches.get_one::<String>("file").map(|s| s.as_str());
         commands::search(search_term, target_file)?;
         return Ok(());
     }
@@ -41,7 +41,7 @@ pub fn cli_match() -> Result<()> {
 
 /// Configure Clap
 /// This function will configure clap and match arguments
-pub fn cli_config() -> Result<clap::ArgMatches> {
+pub fn cli_config() -> Result<ArgMatches> {
     let logo = r#"    ____  ______ _     __ __
    / __ )/  _/ /|   / // /
   / __  |/ // /_|  / // /_
@@ -52,15 +52,15 @@ pub fn cli_config() -> Result<clap::ArgMatches> {
 
 A CLI tool that greps all files under the current directory"#;
 
-    let cli_app = App::new("bigly")
-        .setting(AppSettings::ArgRequiredElseHelp)
+    let cli_app = Command::new("bigly")
+        .arg_required_else_help(true)
         .version("0.0.1")
         .about(logo)
         .author("pomcho555 <pomcho555@users.noreply.github.com>")
         .arg(
             Arg::new("search")
                 .help("Search term to grep for in files")
-                .takes_value(true)
+                .value_name("SEARCH_TERM")
                 .index(1),
         )
         .arg(
@@ -68,19 +68,17 @@ A CLI tool that greps all files under the current directory"#;
                 .short('c')
                 .long("config")
                 .value_name("FILE")
-                .help("Set a custom config file")
-                .takes_value(true),
+                .help("Set a custom config file"),
         )
         .arg(
             Arg::new("file")
                 .long("file")
                 .value_name("FILE")
-                .help("Target a specific file")
-                .takes_value(true),
+                .help("Target a specific file"),
         )
-        .subcommand(App::new("hazard").about("Generate a hazardous occurance"))
-        .subcommand(App::new("error").about("Simulate an error"))
-        .subcommand(App::new("config").about("Show Configuration"));
+        .subcommand(Command::new("hazard").about("Generate a hazardous occurance"))
+        .subcommand(Command::new("error").about("Simulate an error"))
+        .subcommand(Command::new("config").about("Show Configuration"));
 
     // Get matches
     let cli_matches = cli_app.get_matches();

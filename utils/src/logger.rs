@@ -1,6 +1,5 @@
 use slog::Drain;
 use slog::o;
-use slog_syslog::Facility;
 
 use super::error::Result;
 
@@ -13,12 +12,11 @@ pub fn setup_logging() -> Result<()> {
 }
 
 pub fn default_root_logger() -> Result<slog::Logger> {
-    // Create drains
-    let syslog_drain = default_syslog_drain().unwrap_or(default_discard()?);
+    // Create drains - temporarily disable syslog due to security vulnerability
     let term_drain = default_term_drain().unwrap_or(default_discard()?);
 
-    // Merge drains
-    let drain = slog::Duplicate(syslog_drain, term_drain).fuse();
+    // Use only terminal drain for now
+    let drain = term_drain.fuse();
 
     // Create Logger
     let logger = slog::Logger::root(drain, o!("who" => "rust-starter"));
@@ -43,11 +41,3 @@ fn default_term_drain() -> Result<slog_async::Async> {
     Ok(drain)
 }
 
-// syslog drain: Log to syslog
-fn default_syslog_drain() -> Result<slog_async::Async> {
-    let syslog = slog_syslog::unix_3164(Facility::LOG_USER)?;
-
-    let drain = slog_async::Async::default(syslog.fuse());
-
-    Ok(drain)
-}
