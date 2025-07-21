@@ -8,16 +8,16 @@ pub type Result<T> = std::result::Result<T, Error>;
 pub enum Error {
     #[error("Configuration error: {0}")]
     ConfigError(#[from] config::ConfigError),
-    
+
     #[error("Poison error occurred")]
     PoisonError,
-    
+
     #[error("IO error: {0}")]
     IoError(#[from] std::io::Error),
-    
+
     #[error("Clap error: {0}")]
     ClapError(String),
-    
+
     #[error("Logger error: {0}")]
     LoggerError(String),
 }

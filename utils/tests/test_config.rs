@@ -1,5 +1,5 @@
-use utils::app_config::*;
 use serial_test::serial;
+use utils::app_config::*;
 
 #[test]
 #[serial]

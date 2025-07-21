@@ -68,14 +68,14 @@ impl AppConfig {
         if let Some((base_config, _app_config, overrides)) = w.as_mut() {
             // Store the override
             overrides.insert(key.to_string(), value.to_string());
-            
+
             // Rebuild config with overrides
             let mut builder = Config::builder();
-            
+
             // Add the original config sources (we can't easily rebuild from original sources)
             // So we'll create a temporary config from current values plus overrides
             let mut temp_map = std::collections::HashMap::new();
-            
+
             // Get current values
             if let Ok(debug_val) = base_config.get::<bool>("debug") {
                 temp_map.insert("debug".to_string(), debug_val.to_string());
@@ -83,12 +83,12 @@ impl AppConfig {
             if let Ok(url_val) = base_config.get::<String>("database.url") {
                 temp_map.insert("database.url".to_string(), url_val);
             }
-            
+
             // Apply overrides
             for (override_key, override_value) in overrides.iter() {
                 temp_map.insert(override_key.clone(), override_value.clone());
             }
-            
+
             // Create TOML string from the map
             let mut toml_string = String::new();
             for (k, v) in &temp_map {
@@ -101,20 +101,20 @@ impl AppConfig {
                     toml_string.push_str(&format!("{} = \"{}\"\n", k, v));
                 }
             }
-            
+
             // Add database section
             toml_string.push_str("\n[database]\n");
             if let Some(url) = temp_map.get("database.url") {
                 toml_string.push_str(&format!("url = \"{}\"\n", url));
             }
-            
+
             // Build new config
             builder = builder.add_source(File::from_str(&toml_string, FileFormat::Toml));
             builder = builder.add_source(Environment::with_prefix("APP"));
-            
+
             let new_config = builder.build()?;
             let new_app_config: AppConfig = new_config.clone().try_deserialize()?;
-            
+
             // Update the stored config
             *w = Some((new_config, new_app_config, overrides.clone()));
         }

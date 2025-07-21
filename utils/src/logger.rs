@@ -40,4 +40,3 @@ fn default_term_drain() -> Result<slog_async::Async> {
 
     Ok(drain)
 }
-
