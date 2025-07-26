@@ -23,7 +23,7 @@ pub fn hazard() -> Result<()> {
 /// Show the configuration file
 pub fn config() -> Result<()> {
     let config = AppConfig::fetch()?;
-    println!("{:#?}", config);
+    println!("{config:#?}");
 
     Ok(())
 }

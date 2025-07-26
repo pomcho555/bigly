@@ -96,16 +96,16 @@ impl AppConfig {
                     continue; // Handle database section separately
                 }
                 if k == "debug" {
-                    toml_string.push_str(&format!("{} = {}\n", k, v));
+                    toml_string.push_str(&format!("{k} = {v}\n"));
                 } else {
-                    toml_string.push_str(&format!("{} = \"{}\"\n", k, v));
+                    toml_string.push_str(&format!("{k} = \"{v}\"\n"));
                 }
             }
 
             // Add database section
             toml_string.push_str("\n[database]\n");
             if let Some(url) = temp_map.get("database.url") {
-                toml_string.push_str(&format!("url = \"{}\"\n", url));
+                toml_string.push_str(&format!("url = \"{url}\"\n"));
             }
 
             // Build new config
